@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+{% load staticfiles %}
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>Dashboard</title>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+    <meta name="viewport" content="width=device-width" />
+    <!-- Bootstrap core CSS     -->
+    <link href="{% static 'assets/css/bootstrap.min.css' %}" rel="stylesheet" />
+    <!--  Material Dashboard CSS    -->
+    <link href="{% static 'assets/css/material-dashboard.css' %}" rel="stylesheet" />
+    <!--  CSS for Demo Purpose, don't include it in your project     -->
+    <link href="{% static 'assets/css/demo.css' %}" rel="stylesheet" />
+    <!--     Fonts and icons     -->
+    <link href="{% static 'assets/css/font-awesome.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/fonts-googleapis.css' %}" rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="sidebar" data-color="orange" data-image="{% static 'assets/img/sidebar-1.jpg' %}">
+            <!--
+        Tip 1: You can change the color of the sidebar using: data-color="purple | blue | green | orange | red"
+
+        Tip 2: you can also add an image using data-image tag
+    -->
+            <div class="logo">
+                <a href="http://ad07.pythonanywhere.com/" class="simple-text">
+                    Project Mist
+                </a>
+            </div>
+            <div class="sidebar-wrapper">
+                <ul class="nav">
+                    <li class="active">
+                        <a href="http://ad07.pythonanywhere.com/">
+                            <i class="material-icons">dashboard</i>
+                            <p>Dashboard</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/admin">
+                            <i class="material-icons">person</i>
+                            <p>Admin Login</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/plants">
+                            <i class="material-icons">content_paste</i>
+                            <p>Plant Analytics</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="http://ad07.pythonanywhere.com/plants/showTank">
+                            <i class="material-icons">library_books</i>
+                            <p>Water Tank Details</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="http://ad07.pythonanywhere.com/plants/showLocation">
+                            <i class="material-icons">location_on</i>
+                            <p>Plant Location</p>
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+                <div class="main-panel" >
+            <div class="card card-plain" style="padding-left: 20px;padding-top: 50px;padding-right: 20px;">
+                <div class="card-header" data-background-color="green" style="font-family: 'Changa', sans-serif;color:white;font-size: 50px">
+                ITWS - 3 PROJECT
+                </div>
+            </div>
+            <div class="card card-plain" style="padding-left: 20px;padding-top: 10px;padding-right: 20px;">
+                <div class="card-header" data-background-color="blue" style="font-family: 'Changa', sans-serif;color:white;font-size: 50px">
+                IoT BASED SMART IRRIGATION
+                </div>
+            </div>
+            <br><br><br><br>
+            <div class="row">
+                        <div class="col-md-12 col-lg-12">
+                            <div class="card">
+                                <div class="card-header" data-background-color="purple">
+                                    <h4 class="title">Weather Forecast</h4>
+                                    <p class="category">This table shows the weather forecast for next 8 days</p>
+                                </div>
+                                <div class="card-content table-responsive">
+                                    <table class="table">
+                                        <thead class="text-primary">
+                                            <th>Day</th>
+                                            <th>Lowest Temperature</th>
+                                            <th>Highest Temperature</th>
+                                            <th>Forecast</th>
+                                        </thead>
+                                        <tbody style="font-size:150%">
+                                            <tr>
+                                                <td>{{forecasts.0.0}}</td>
+                                                <td>{{forecasts.0.1}}</td>
+                                                <td>{{forecasts.0.2}}</td>
+                                                <td class="text-primary">{{forecasts.0.3}}</td>
+                                            </tr>
+                                            <tr>
+                                              <td>{{forecasts.1.0}}</td>
+                                              <td>{{forecasts.1.1}}</td>
+                                              <td>{{forecasts.1.2}}</td>
+                                              <td class="text-primary">{{forecasts.1.3}}</td>
+                                            </tr>
+                                            <tr>
+                                              <td>{{forecasts.2.0}}</td>
+                                              <td>{{forecasts.2.1}}</td>
+                                              <td>{{forecasts.2.2}}</td>
+                                              <td class="text-primary">{{forecasts.2.3}}</td>
+                                            </tr>
+                                            <tr>
+                                              <td>{{forecasts.3.0}}</td>
+                                              <td>{{forecasts.3.1}}</td>
+                                              <td>{{forecasts.3.2}}</td>
+                                              <td class="text-primary">{{forecasts.3.3}}</td>
+                                            </tr>
+                                            <tr>
+                                              <td>{{forecasts.4.0}}</td>
+                                              <td>{{forecasts.4.1}}</td>
+                                              <td>{{forecasts.4.2}}</td>
+                                              <td class="text-primary">{{forecasts.4.3}}</td>
+                                            </tr>
+                                            <tr>
+                                              <td>{{forecasts.5.0}}</td>
+                                              <td>{{forecasts.5.1}}</td>
+                                              <td>{{forecasts.5.2}}</td>
+                                              <td class="text-primary">{{forecasts.5.3}}</td>
+                                            </tr>
+                                            <tr>
+                                              <td>{{forecasts.6.0}}</td>
+                                              <td>{{forecasts.6.1}}</td>
+                                              <td>{{forecasts.6.2}}</td>
+                                              <td class="text-primary">{{forecasts.6.3}}</td>
+                                            </tr>
+                                            <tr>
+                                              <td>{{forecasts.7.0}}</td>
+                                              <td>{{forecasts.7.1}}</td>
+                                              <td>{{forecasts.7.2}}</td>
+                                              <td class="text-primary">{{forecasts.7.3}}</td>
+                                            </tr>
+                                            <tr>
+                                              <td>{{forecasts.8.0}}</td>
+                                              <td>{{forecasts.8.1}}</td>
+                                              <td>{{forecasts.8.2}}</td>
+                                              <td class="text-primary">{{forecasts.8.3}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                      </div>
+        </div>
+
+
+
+    </div>
+</body>
+<!--   Core JS Files   -->
+<script src="{% static 'assets/js/jquery-3.2.1.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/js/bootstrap.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/js/material.min.js' %}" type="text/javascript"></script>
+<!--  Charts Plugin -->
+<script src="{% static 'assets/js/chartist.min.js' %}"></script>
+<!--  Dynamic Elements plugin -->
+<script src="{% static 'assets/js/arrive.min.js' %}"></script>
+<!--  PerfectScrollbar Library -->
+<script src="{% static 'assets/js/perfect-scrollbar.jquery.min.js' %}"></script>
+<!--  Notifications Plugin    -->
+<script src="{% static 'assets/js/bootstrap-notify.js' %}"></script>
+<!--  Google Maps Plugin    -->
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
+<!-- Material Dashboard javascript methods -->
+<script src="{% static 'assets/js/material-dashboard.js' %}"></script>
+<!-- Material Dashboard DEMO methods, don't include it in your project! -->
+<script src="{% static 'assets/js/demo.js' %}"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+
+        // Javascript method's body can be found in assets/js/demos.js
+        demo.initDashboardPageCharts();
+
+
+    });
+</script>
+
+</html>

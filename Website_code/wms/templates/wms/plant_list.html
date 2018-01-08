@@ -1,0 +1,12 @@
+{% extends 'wms/base.html' %}
+{% block content %}
+	
+	    <div>
+	        <h2>
+				{% for i in plants %}
+	        	<a href="{% url 'plant_detail' i%}">Plant id {{i}}</a>
+				{% endfor %}
+	    	</h2>	
+	    </div>
+	
+{% endblock %}

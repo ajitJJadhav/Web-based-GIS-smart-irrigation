@@ -1,0 +1,509 @@
+sm[0]<!doctype html>
+<html lang="en">
+{% load staticfiles %}
+
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Saira" rel="stylesheet">
+	<meta http-equiv="refresh" content="20">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>Dashboard</title>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+    <meta name="viewport" content="width=device-width" />
+    <!-- Bootstrap core CSS     -->
+    <link href="{% static 'assets/css/bootstrap.min.css' %}" rel="stylesheet" />
+    <!--  Material Dashboard CSS    -->
+    <link href="{% static 'assets/css/material-dashboard.css' %}" rel="stylesheet" />
+    <!--  CSS for Demo Purpose, don't include it in your project     -->
+    <link href="{% static 'assets/css/demo.css' %}" rel="stylesheet" />
+    <!--     Fonts and icons     -->
+    <link href="{% static 'assets/css/font-awesome.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/fonts-googleapis.css' %}" rel='stylesheet' type='text/css'>
+    <style>
+     #legend {
+        font-family: Arial, sans-serif;
+        background: #fff;
+        padding: 10px;
+        margin: 20px;
+        border: 3px solid #000;
+      }
+      #legend h3 {
+        margin-top: 0;
+
+
+      }
+      #legend img {
+        vertical-align: middle;
+      }
+
+
+
+
+
+</style>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="sidebar" data-color="purple" data-image="{% static 'assets/img/sidebar-1.jpg' %}">
+            <!--
+        Tip 1: You can change the color of the sidebar using: data-color="purple | blue | green | orange | red"
+
+        Tip 2: you can also add an image using data-image tag
+    -->
+            <div class="logo">
+                <a href="http://ad07.pythonanywhere.com/" class="simple-text">
+                    Project Mist
+                </a>
+            </div>
+            <div class="sidebar-wrapper">
+                <ul class="nav">
+                    <li>
+                        <a href="http://ad07.pythonanywhere.com/">
+                            <i class="material-icons">dashboard</i>
+                            <p>Dashboard</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/admin">
+                            <i class="material-icons">person</i>
+                            <p>Admin Login</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/plants">
+                            <i class="material-icons">content_paste</i>
+                            <p>Plant Analytics</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/plants/showTank">
+                            <i class="material-icons">library_books</i>
+                            <p>Water Tank Level</p>
+                        </a>
+                    </li>
+                    <li class="active">
+                        <a href="/plants/showLocation">
+                            <i class="material-icons">location_on</i>
+                            <p>Plant Location</p>
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+        <h1 style="text-align:center;font-family: 'Saira', sans-serif;padding-left: 100px;">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Click on the markers to get details</h1>
+        <div id="map"></div>
+        <div id="map"><div id="legend" style="text-align: left;"><h3>Legend</h3></div></div>
+    </div>
+</body>
+<!--   Core JS Files   -->
+<script src="{% static 'assets/js/jquery-3.2.1.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/js/bootstrap.min.js' %}" type="text/javascript"></script>
+<script src="{% static 'assets/js/material.min.js' %}" type="text/javascript"></script>
+<!--  Charts Plugin -->
+<script src="{% static 'assets/js/chartist.min.js' %}"></script>
+<!--  Dynamic Elements plugin -->
+<script src="{% static 'assets/js/arrive.min.js' %}"></script>
+<!--  PerfectScrollbar Library -->
+<script src="{% static 'assets/js/perfect-scrollbar.jquery.min.js' %}"></script>
+<!--  Notifications Plugin    -->
+<script src="{% static 'assets/js/bootstrap-notify.js' %}"></script>
+<!--  Google Maps Plugin    -->
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyApCLDGhxmg2-cgs0sSHj-zqHoYM_8KrRo"></script>
+<!-- Material Dashboard javascript methods -->
+<script src="{% static 'assets/js/material-dashboard.js' %}"></script>
+<!-- Material Dashboard DEMO methods, don't include it in your project! -->
+<script src="{% static 'assets/js/demo.js' %}"></script>
+
+<script>
+  function initMap() {
+    var size={{size}};
+    console.log(size);
+
+
+
+
+
+
+
+
+    var watertank={lat: 13.549549, lng: 79.999293};
+    var weatherstation={lat: 13.549549, lng: 79.998993};
+
+    console.log("fff");
+
+    //var sm[0],SM[0]={{plant.0.soilMoisture}};
+    //var sm[1],SM[1]={{plant.1.soilMoisture}};
+
+    var rain={{rain}},raincolor;
+
+      raincolor='http://maps.google.com/mapfiles/ms/icons/blue-dot.png';
+
+
+
+      var map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 17,
+        mapTypeId: 'hybrid',
+        center: watertank
+      });
+
+
+
+      var c=0;
+      var plant=[];
+      var sm=[],SM=[],marker=[],plantstr=[],contentString=[],infowindow=[];
+      var temperature,humidity;
+      {%for i in locations %}
+        plant[{{i.plantID}}] = {lat:{{i.latitude}},lng:{{i.longitude}}};
+        {%for j in plant %}
+          {%if i.plantID == j.plantID%}
+            SM[{{i.plantID}}] = {{j.soilMoisture}};
+            temperature={{j.temperature}};
+            humidity={{j.humidity}};
+            {% endif %}
+        {% endfor %}
+        if(SM[{{i.plantID}}]<-3)
+        {
+          sm[{{i.plantID}}]='http://maps.google.com/mapfiles/ms/icons/red-dot.png';
+        }
+        else
+        {
+           sm[{{i.plantID}}]='http://maps.google.com/mapfiles/ms/icons/green-dot.png';
+        }
+        marker[{{i.plantID}}] = new google.maps.Marker({
+          position: plant[{{i.plantID}}],
+          scaledSize: new google.maps.Size(100, 100),
+          draggable: false,
+          animation: google.maps.Animation.DROP,
+
+          icon: {url:sm[{{i.plantID}}], scaledSize: new google.maps.Size(50, 50), origin: new google.maps.Point(0,0),anchor: new google.maps.Point(0, 0)},
+          map: map
+        });
+        if(SM[{{i.plantID}}]<0)
+        {
+          marker[{{i.plantID}}].setAnimation(google.maps.Animation.BOUNCE);
+        }
+        if(rain==1 || SM[{{i.plantID}}]>0 )
+         plantstr[{{i.plantID}}]="NO";
+        else
+         plantstr[{{i.plantID}}]="YES";
+
+         contentString[{{i.plantID}}] = '<h1 style="color:white;background-color:#4863A0;">&nbspDetails of plant '+{{i.plantID}}+'&nbsp</h1><br>'+
+                               '<h2 style="text-align:center">Location : [ 13.54, 79.99]<br>Soil Moisture : '+SM[{{i.plantID}}]+'<br>Actuator : '+plantstr[{{i.plantID}}]+'</h2>';
+
+         infowindow[{{i.plantID}}] = new google.maps.InfoWindow({
+                          content: contentString[{{i.plantID}}]
+                          });
+
+      {%endfor%}
+    /*if(SM[0]<-3)
+    {
+      sm[0]='http://maps.google.com/mapfiles/ms/icons/red-dot.png';
+    }var temperature={{plant.0.temperature}};
+    var humidity={{plant.1.humidity}};
+    else
+    {
+       sm[0]='http://maps.google.com/mapfiles/ms/icons/green-dot.png';
+    }
+
+    if(SM[1]<0)
+    {
+      sm[1]='http://maps.google.com/mapfiles/ms/icons/red-dot.png';
+    }
+    else
+    {
+       sm[1]='http://maps.google.com/mapfiles/ms/icons/green-dot.png';
+    }
+*/
+
+    /*var marker = new google.maps.Marker({if(SM[0]<0)
+    {
+      marker.setAnimation(google.maps.Animation.BOUNCE);
+    }
+      position: plant[0],
+      scaledSize: varnew google.maps.Size(100, 100),
+      draggable: false,
+      animation: google.maps.Animation.DROP,
+
+      icon: {url:sm[0], scaledSize: new google.maps.Size(50, 50), origin: new google.maps.Point(0,0),anchor: new google.maps.Point(0, 0)},
+      map: map
+    });[1]
+*/
+    //marker.addListener('load', toggleBounce);
+    /*var marker2 = new google.maps.Marker({
+      position: plant[1],
+      scaledSize: new google.maps.Size(50, 50),
+      icon: {url:sm[1], scaledSize: new google.maps.Size(50, 50), origin: new google.maps.Point(0,0), anchor: new google.maps.Point(0, 0)},
+      map: map
+
+
+    });*/
+
+    /*if(SM[0]<0)
+    {
+      marker.setAnimation(google.maps.Animation.BOUNCE);
+    }
+
+
+    if(SM[1]<0)
+    {
+      marker2.setAnimation(google.maps.Animation.BOUNCE);
+    }
+    */
+    var marker3 = new google.maps.Marker({
+      position: watertank,
+      scaledSize: new google.maps.Size(50, 50),
+      icon: {url:raincolor, scaledSize: new google.maps.Size(50, 50), origin: new google.maps.Point(0,0), anchor: new google.maps.Point(0, 0)},
+      map: map
+
+
+    });
+
+
+
+    var marker4 = new google.maps.Marker({
+      position: weatherstation,
+      scaledSize: new google.maps.Size(50, 50),
+      icon: {url:'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png', scaledSize: new google.maps.Size(50, 50), origin: new google.maps.Point(0,0), anchor: new google.maps.Point(0, 0)},
+      map: map
+
+
+    });
+
+    if(rain!=0)
+    {
+      marker4.setAnimation(google.maps.Animation.BOUNCE);
+    }
+
+    /*var infowindow1 = new google.maps.InfoWindow({
+      content: contentString1
+    });
+    */
+   /*var plant1string="YES";
+   var plant2string="NO";
+
+   if(rain==1 || SM[0]>0 )
+    plant1string="NO";
+   else
+    plant1string="YES";
+
+   if(rain==1 || SM[1]>0 )
+    plant2string="NO";
+   else
+    plant2string="YES";
+    */
+  /*var contentString1 = '<h1 style="color:white;background-color:#4863A0;">&nbspDetails of plant 1&nbsp</h1><br>\
+                          <h2 style="text-align:center">Lvar infowindow1 = new google.maps.InfoWindow({
+      content: contentString1
+    });ocation : [ 13.54, 79.99]<br>Soil Moisture : '+SM[0]+'<br>Actuator : '+plant1string+'</h2>';
+
+
+
+
+
+
+  var contentString1 = '<h1 style="color:white;background-color:#4863A0;">&nbspDetails of plant 1&nbsp</h1><br>\
+                          <h2 style="text-align:center">Location : [ 13.54, 79.99]<br>Soil Moisture : '+SM[0]+'<br>Actuator : '+plant1string+'</h2>';
+*/
+  /*  var infowindow1 = new google.maps.InfoWindow({
+      content: contentString1
+    });
+*/
+
+
+
+
+  /*  var contentString2 = '<h1 style="color:white;background-color:#4863A0;">&nbspDetails of plant 2&nbsp</h1><br>\
+                          <h2 style="text-align:center">Location : [ 13.54, 79.99]<br>Soil Moisture : '+SM[1]+'<br>Actuator : '+plant2string+'</h2>';
+
+
+    var infowindow2 = new google.maps.InfoWindow({
+      content: contentString2
+    });
+    {% for i in range(locations
+*/
+
+
+    var tankheight = {{ tank }} ;
+    var contentString3 = '<h1 style="color:white;background-color:#4863A0;">&nbspDetails of watertank&nbsp</h1><h2 style="text-align:center">Location : [ 13.54, 79.99]<br><br>Tank Height : '+ tankheight +  '</h2>';
+
+    var infowindow3 = new google.maps.InfoWindow({
+      content: contentString3
+    });
+
+
+
+
+
+    var contentString4= '<h1 style="color:white;background-color:#4863A0;">&nbspDetails of weatherstation&nbsp<br></h1>'+'<h2 style="text-align:center"></h2>'+
+                          '<h2>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspTEMPERATURE : '+temperature+
+
+                          '<br>'+'&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspHUMIDITY&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: '+
+                          humidity+'<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspRAINFALL &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp: ';
+
+    if(rain==1)
+       contentString4=contentString4+'Yes'+'</h2>';
+    else {
+      contentString4=contentString4+'No'+'</h2>';
+    }
+
+    var infowindow4 = new google.maps.InfoWindow({
+      content: contentString4
+
+      });
+    var z=0;
+
+    {% for i in locations %}
+
+      marker[{{i.plantID}}].addListener('click', function() {
+
+        infowindow3.close(map,marker3);
+        infowindow4.close(map,marker4);
+        infowindow[{{i.plantID}}].open(map,marker[{{i.plantID}}]);
+        {% for j in locations %}
+          {% if i.plantID != j.plantID %}
+        infowindow[{{j.plantID}}].close(map,marker[{{j.plantID}}]);
+          {% endif %}
+        {%endfor%}
+      });
+
+    {% endfor %}
+
+
+
+
+
+  /*  marker[0].addListener('click', function() {
+      infowindow[1].close(map,marker[1]);
+      infowindow3.close(map,marker3);
+      infowindow4.close(map,marker4);
+      infowindow[0].open(map, marker[0]);
+    });
+
+    marker[1].addListener('click', function() {
+      infowindow3.close(map,marker3);
+      infowindow[0].close(map,marker[0]);
+      infowindow4.close(map,marker4);
+      infowindow[1].open(map, marker[1]);
+    });
+*/
+    marker3.addListener('click', function() {
+      {% for j in locations %}
+      infowindow[{{j.plantID}}].close(map,marker[{{j.plantID}}]);
+      {%endfor%}
+      infowindow4.close(map,marker4);
+      infowindow3.open(map, marker3);
+
+    });
+
+    marker4.addListener('click', function() {
+      {% for j in locations %}
+      infowindow[{{j.plantID}}].close(map,marker[{{j.plantID}}]);
+      {%endfor%}
+      infowindow3.close(map,marker3);
+      infowindow4.open(map, marker4);
+    });
+
+
+
+
+/*
+
+    {% for i in plant %}
+    {% if i.plantid != 0 and i.plantid != 1 and i.plantid != 2 %}
+    {% for j in locations %}
+    {% if i.plantid == j.plantid %}
+      var plantloc = {lat: {{j.latitude}}, lng: {{ j.longitude}} };
+      var SM={{i.soilMoisture }};
+      var sm;
+      if(SM<-3)
+      {
+        sm='http://maps.google.com/mapfiles/ms/icons/red-dot.png';
+      }
+      else
+      {
+         sm='http://maps.google.com/mapfiles/ms/icons/green-dot.png';
+      }
+
+      var markertemp = new google.maps.Marker({
+        position: plantloc,
+        scaledSize: new google.maps.Size(50, 50),
+        icon: {url:sm, scaledSize: new google.maps.Size(50, 50), origin: new google.maps.Point(0,0), anchor: new google.maps.Point(0, 0)},
+        map: map
+
+
+      });
+
+
+
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+    {% endfor %}
+
+
+
+*/
+
+     var icons = {
+          DyingPlant: {
+            name: 'Dying Plant',
+            icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
+          },
+          HealthyPlant: {
+            name: 'Healthy Plant',
+            icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
+          },
+          watertank: {
+            name: 'WaterTank',
+            icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+          },
+          weatherstation: {
+            name: 'WeatherStation',
+            icon: 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png'
+          }
+        };
+
+        var legend = document.getElementById('legend');
+        for (var key in icons) {
+          var type = icons[key];
+          var name = type.name;
+          var icon = type.icon;
+          var div = document.createElement('div');
+          div.innerHTML = '<img src="' + icon + '"> ' + name;
+          legend.appendChild(div);
+        }
+
+        map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(legend);
+
+
+
+  }
+
+  function toggleBounce() {
+    if (marker.getAnimation() !== null) {
+      marker.setAnimation(null);
+    } else {
+      marker.setAnimation(google.maps.Animation.BOUNCE);
+   }
+  }
+
+</script>
+<script async defer
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD9_vIcA5Cr_Ozm8GPlJnVuBbpfRHKPBVQ&callback=initMap">
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        if ($('.main-panel > .content').length == 0) {
+            $('.main-panel').css('height', '100%');
+        }
+
+
+        // Javascript method's body can be found in assets/js/demos.js
+        //demo.initMap();
+    });
+</script>
+
+</html>
